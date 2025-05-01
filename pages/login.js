@@ -25,8 +25,8 @@ export default function LoginPage() {
       body: JSON.stringify({ loginId, password, isAdmin }),
     });
 
-    if (!res.ok) {
-      const { error: msg } = await res.json();
+    if (!res?.ok) {
+      const { error: msg } = await res?.json();
       setError(msg || "Login failed");
       return;
     }

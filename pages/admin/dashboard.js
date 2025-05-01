@@ -10,10 +10,20 @@ const sportsList = ["Kho-Kho", "Kabaddi", "Chess", "Volleyball", "Badminton"];
 const genders = ["Boys", "Girls"];
 const categories = ["U-14", "U-17", "U-19"];
 const districts = [
-  "North District",
-  "South District",
-  "East District",
-  "West District",
+  "Bulandshahr",
+  "Gautam Buddh Nagar",
+  "Ghaziabad",
+  "Hapur",
+  "Meerut",
+  "Baghpat",
+  "Muzaffarnagar",
+  "Shamli",
+  "Saharanpur",
+  "Bijnor",
+  "Amroha",
+  "Sambhal",
+  "Rampur",
+  "Moradabad"
 ];
 
 export default function AdminDashboard() {

@@ -9,7 +9,8 @@
     "start": "next start",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
     "lint": "next lint",
-    "seed": "node scripts/seed.js"
+    "seed": "node scripts/seed.js",
+    "seed_school": "node scripts/seed_school.js"
   },
   "dependencies": {
     "@netlify/plugin-nextjs": "^5.10.7",
