@@ -1,6 +1,6 @@
 // contexts/AuthContext.js
 import { createContext, useState, useEffect } from "react";
-import { apiFetch } from '../lib/api.js';
+import { apiFetch } from "../lib/api.js";
 
 export const AuthContext = createContext({
   user: null,

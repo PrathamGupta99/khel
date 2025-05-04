@@ -11,16 +11,10 @@ const ALL_COLUMNS = [
   "U-19 Girls",
 ];
 
+// 2) Master list of all sports (rows)
+const ALL_SPORTS = ["Kho-Kho", "Kabaddi", "Chess", "Volleyball", "Badminton"];
 export function SportsPivot({ sports }) {
-  // 2) Build a Set of the column‐keys actually present
-  const presentCols = new Set(
-    sports.map(({ category, gender }) => `${category} ${gender}`),
-  );
-
-  // 3) Filter ALL_COLUMNS to only what's present, preserving order
-  const columns = ALL_COLUMNS.filter((col) => presentCols.has(col));
-
-  // 4) Build sport → Set of its own present column‐keys
+  // Build a map: sport → Set of its present column‐keys
   const map = sports.reduce((acc, { sport, gender, category }) => {
     const key = `${category} ${gender}`;
     if (!acc[sport]) acc[sport] = new Set();
@@ -28,13 +22,12 @@ export function SportsPivot({ sports }) {
     return acc;
   }, {});
 
-  // 5) Render the pivot table
   return (
     <table style={{ borderCollapse: "collapse", width: "100%" }}>
       <thead>
         <tr>
           <th style={{ border: "1px solid #ddd", padding: "0.5rem" }}>Sport</th>
-          {columns.map((col) => (
+          {ALL_COLUMNS.map((col) => (
             <th
               key={col}
               style={{ border: "1px solid #ddd", padding: "0.5rem" }}
@@ -45,25 +38,33 @@ export function SportsPivot({ sports }) {
         </tr>
       </thead>
       <tbody>
-        {Object.entries(map).map(([sport, set]) => (
-          <tr key={sport}>
-            <td style={{ border: "1px solid #ddd", padding: "0.5rem" }}>
-              {sport}
-            </td>
-            {columns.map((col) => (
-              <td
-                key={col}
-                style={{
-                  textAlign: "center",
-                  border: "1px solid #ddd",
-                  background: set.has(col) ? "#cfc" : "#f9f9f9",
-                }}
-              >
-                {set.has(col) ? "✔" : ""}
+        {ALL_SPORTS.map((sport) => {
+          const set = map[sport] || new Set();
+          return (
+            <tr key={sport}>
+              <td style={{ border: "1px solid #ddd", padding: "0.5rem" }}>
+                {sport}
               </td>
-            ))}
-          </tr>
-        ))}
+              {ALL_COLUMNS.map((col) => (
+                <td
+                  key={col}
+                  style={{
+                    textAlign: "center",
+                    border: "1px solid #ddd",
+                    padding: "0.5rem",
+                    background: set.has(col) ? "#c8e6c9" : "#f9f9f9",
+                  }}
+                >
+                  {set.has(col) && (
+                    <span style={{ color: "green", fontSize: "1.2rem" }}>
+                      ✔
+                    </span>
+                  )}
+                </td>
+              ))}
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );

@@ -1,7 +1,7 @@
 // pages/forgot-password.js
 
 import { useState } from "react";
-import { apiFetch } from '../lib/api.js';
+import { apiFetch } from "../lib/api.js";
 
 export default function ForgotPasswordPage() {
   const [loginId, setLoginId] = useState("");

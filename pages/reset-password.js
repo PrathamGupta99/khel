@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { apiFetch } from '../lib/api.js';
+import { apiFetch } from "../lib/api.js";
 
 export default function ResetPasswordPage() {
   const router = useRouter();

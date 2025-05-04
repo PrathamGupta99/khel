@@ -1,6 +1,6 @@
 // pages/participation.js
 
-import { apiFetch } from '../lib/api.js';
+import { apiFetch } from "../lib/api.js";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { useRouter } from "next/router";
 import { AuthContext } from "../contexts/AuthContext.js";
@@ -24,7 +24,7 @@ const districts = [
   "Amroha",
   "Sambhal",
   "Rampur",
-  "Moradabad"
+  "Moradabad",
 ];
 
 export default function ParticipationPage() {
@@ -59,7 +59,7 @@ export default function ParticipationPage() {
 
   async function fetchParticipation() {
     try {
-      const res = await apiFetch('/api/participations', {
+      const res = await apiFetch("/api/participations", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       const data = await res.json();

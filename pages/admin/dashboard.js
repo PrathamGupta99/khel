@@ -1,6 +1,6 @@
 // pages/admin/dashboard.js
 
-import { apiFetch } from '../../lib/api.js';
+import { apiFetch } from "../../lib/api.js";
 import { SportsPivot } from "../../components/SportsPivot.js";
 import { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
@@ -23,7 +23,7 @@ const districts = [
   "Amroha",
   "Sambhal",
   "Rampur",
-  "Moradabad"
+  "Moradabad",
 ];
 
 export default function AdminDashboard() {
@@ -37,6 +37,7 @@ export default function AdminDashboard() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [searchName, setSearchName] = useState("");
 
   // Redirect non-admins
   useEffect(() => {
@@ -103,9 +104,33 @@ export default function AdminDashboard() {
     }
   };
 
+  const cellStyles = { border: "1px solid #ddd", padding: "0.5rem" };
+  const filtered = results.filter((p) =>
+    p.school.name.toLowerCase().includes(searchName.toLowerCase()),
+  );
+
   return (
-    <div style={{ maxWidth: 1000, margin: "2rem auto", padding: "1rem" }}>
+    <div
+      style={{
+        maxWidth: 1000,
+        margin: "1rem auto",
+        padding: "1rem",
+        border: "1px solid #ddd",
+        borderRadius: 4,
+        background: "#fff",
+      }}
+    >
       <h1>Admin Dashboard</h1>
+      {/* SEARCH BY SCHOOL NAME */}
+      <div style={{ marginBottom: "1rem" }}>
+        <input
+          type="text"
+          placeholder="Search by school name…"
+          value={searchName}
+          onChange={(e) => setSearchName(e.target.value)}
+          style={{ width: "100%", padding: "0.5rem", boxSizing: "border-box" }}
+        />
+      </div>
       <div
         style={{
           display: "grid",
@@ -176,62 +201,79 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div style={{ marginBottom: "1rem" }}>
+      <div
+        style={{
+          marginBottom: "1rem",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
         <button
           onClick={loadResults}
           disabled={loading}
-          style={{ padding: "0.5rem 1.0rem", marginRight: "1rem" }}
+          style={{ padding: "0.3rem 0.5rem", marginRight: "1rem" }}
         >
           {loading ? "Loading…" : "Load"}
         </button>
-        <button onClick={exportExcel} style={{ padding: "0.5rem 1.0rem" }}>
+        <button onClick={exportExcel} style={{ padding: "0.3rem 0.5rem" }}>
           Export Excel
         </button>
       </div>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
-      
+
       {!loading && !error && (
-     <p style={{ margin: '1rem 0', fontWeight: 'bold' }}>
-       {results.length} entr{results.length === 1 ? 'y' : 'ies'} found
-     </p>
-   )}
+        <p style={{ margin: "1rem 0", fontWeight: "bold" }}>
+          {filtered.length} entr{filtered.length === 1 ? "y" : "ies"} found
+        </p>
+      )}
 
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr>
-            <th style={{ border: "1px solid #ddd", padding: "0.5rem" }}>
-              S. No.
-            </th>
-            <th style={{ border: "1px solid #ddd", padding: "0.5rem" }}>
-              School Name
-            </th>
-            <th style={{ border: "1px solid #ddd", padding: "0.5rem" }}>
-              District
-            </th>
-            <th style={{ border: "1px solid #ddd", padding: "0.5rem" }}>
-              Sports
-            </th>
+            <th style={cellStyles}>#</th>
+            <th style={cellStyles}>School Name</th>
+            <th style={cellStyles}>District</th>
+            <th style={cellStyles}>Sports</th>
+            <th style={cellStyles}>Teams</th>
           </tr>
         </thead>
         <tbody>
-          {results.map((p, idx) => (
+          {console.log(filtered)}
+          {filtered.map((p, idx) => (
             <tr key={idx}>
-              <td style={{ border: "1px solid #ddd", padding: "0.5rem" }}>
-                {idx + 1}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "0.5rem" }}>
-                {p.school.name}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "0.5rem" }}>
-                {p.school.district}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "0.5rem" }}>
+              <td style={cellStyles}>{idx + 1}</td>
+              <td style={cellStyles}>{p.school.name}</td>
+              <td style={cellStyles}>{p.school.district}</td>
+              <td style={cellStyles}>
                 <SportsPivot sports={p.sports} />
+              </td>
+              <td
+                style={{
+                  border: "1px solid #ddd",
+                  padding: "0.5rem",
+                  textAlign: "center",
+                }}
+              >
+                <button
+                  onClick={() =>
+                    router.push(
+                      `/admin/participations/${p.school._id}/teams/all`,
+                    )
+                  }
+                  style={{
+                    padding: "0.25rem 0.5rem",
+                    borderRadius: 3,
+                    border: "1px solid",
+                    cursor: "pointer",
+                  }}
+                >
+                  View Teams
+                </button>
               </td>
             </tr>
           ))}
-          {results.length === 0 && !loading && (
+          {filtered.length === 0 && !loading && (
             <tr>
               <td colSpan="5" style={{ textAlign: "center", padding: "1rem" }}>
                 No records found.

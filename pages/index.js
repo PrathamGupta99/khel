@@ -3,23 +3,30 @@
 import { useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 import { AuthContext } from "../contexts/AuthContext.js";
+import { PARTICIPATION_CUTOFF } from "../lib/config.js";
 
 export default function IndexPage() {
   const { user } = useContext(AuthContext);
   const router = useRouter();
 
   useEffect(() => {
-    // 1) If no token, send to login immediately
     if (typeof window !== "undefined" && !localStorage.getItem("token")) {
       router.replace("/login");
       return;
     }
-    // 2) Once user is loaded, redirect based on role
+    if (!user) return;
     if (user) {
-      const destination = user.isAdmin ? "/admin/dashboard" : "/participation";
+      let destination = "/admin/dashboard";
+      if (!user?.isAdmin) {
+        const now = new Date();
+        if (now < PARTICIPATION_CUTOFF) {
+          destination = "/participation";
+        } else {
+          destination = "/player-details";
+        }
+      }
       router.replace(destination);
     }
-    // If user is still null (but token exists), we wait for AuthContext to load it
   }, [user, router]);
 
   return (

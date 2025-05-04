@@ -3,7 +3,7 @@
 import { useState, useContext } from "react";
 import { useRouter } from "next/router";
 import { AuthContext } from "../contexts/AuthContext.js";
-import { apiFetch } from '../lib/api.js';
+import { apiFetch } from "../lib/api.js";
 import Link from "next/link.js";
 
 export default function LoginPage() {
@@ -45,7 +45,18 @@ export default function LoginPage() {
     }
 
     // 3) Redirect based on role
-    const dest = isAdmin ? "/admin/dashboard" : "/participation";
+    let dest = "/admin/dashboard";
+    if (!isAdmin) {
+      const now = new Date();
+      
+      const PARTICIPATION_CUTOFF = new Date('06-01-2025')
+
+      if (now < PARTICIPATION_CUTOFF) {
+        dest = "/participation";
+      } else {
+        dest = "/player-details";
+      }
+    }
     router.push(dest);
   };
 
